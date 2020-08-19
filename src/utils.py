@@ -3,6 +3,7 @@ import functools
 import multiprocessing
 import numpy as np
 import pandas as pd
+import os
 
 
 class CSVManager():
@@ -10,23 +11,33 @@ class CSVManager():
         self.df = None
         self.bins = None
         self.labels = None
+        self.source = os.path.join('..', 'csv')
+        self.target = os.path.join('..', 'csv-pp')
 
     def read(self, filename, sep=';', na_values=['N/I'], orderby=None, ascending=True):
-        self.df = pd.read_csv(filename, sep=sep, na_values=na_values)
+        self.df = pd.read_csv(os.path.join(self.source, filename), sep=sep, na_values=na_values)
 
         if orderby is not None:
             self.df.sort_values(by=orderby, ascending=ascending, ignore_index=True, inplace=True)
 
-    def save(self, name, sep=';', na_rep=-1):
-        self.df.to_csv(name, sep=sep, na_rep=na_rep, float_format='%g', index=False)
+    def save(self, filename, sep=';', na_rep=-1):
+        os.makedirs(self.target, exist_ok=True)
+        filepath = os.path.join(self.target, filename)
+        self.df.to_csv(filepath, sep=sep, na_rep=na_rep, float_format='%g', index=False)
 
-    def info(self):
+    def info(self, jupyter=True):
+        if jupyter:
+            return self.df.info()
         print(self.df.info())
 
-    def head(self, value=10):
+    def head(self, value=10, jupyter=True):
+        if jupyter:
+            return self.df.head(value)
         print(self.df.head(value))
 
-    def null_sum(self):
+    def null_sum(self, jupyter=True):
+        if jupyter:
+            return self.df.isnull().sum()
         print(self.df.isnull().sum())
 
     def ppnan(self, dropna_cols=None, fillna_cols=None, fillna_value=None):
@@ -51,6 +62,10 @@ class CSVManager():
             self.df[delta_col] = self.df[delta_col].astype('timedelta64[D]').astype(int)
             self.df[delta_col] = self.df[delta_col].clip(lower=0)
 
+    def set_end_month(self, cols):
+        for col in cols:
+            self.df[col + 'EndMonth'] = self.df[col].apply(lambda x: x + pd.offsets.MonthEnd(1))
+
     def set_range(self, bins, cols):
         self.bins = bins + [np.inf]
         self.labels = [f'{self.bins[i]}-{self.bins[i+1]-1}' for i in range(len(self.bins[:-1]))]
@@ -65,9 +80,12 @@ class CSVManager():
             self.df[col + 'Day'] = self.df[col].dt.day
             self.df[col + 'WeekDay'] = self.df[col].dt.weekday
 
-    def minmax_filter(self, min_cols, max_cols):
+    def minmax_condition(self, min_cols, max_cols, filt=True):
         for mi, ma in zip(min_cols, max_cols):
-            self.df = self.df[self.df[mi] < self.df[ma]]
+            if filt:
+                self.df = self.df[self.df[mi] <= self.df[ma]]
+            else:
+                self.df['After' + ma] = (self.df[mi] > self.df[ma]) * 1
 
     def cast_to_number(self, cols):
         self.df = self.df.apply(lambda x: [int(''.join(format(ord(w), '') for w in str(y)))
@@ -87,9 +105,30 @@ class CSVManager():
         test = self.df[(self.df[col] >= date_0) & (self.df[col] < date_2)]
         return train, test
 
+    def get_df_binary_encoding(self, cols):
+        df = self.df.copy()
+
+        for col in cols:
+            bincol = np.array([str('{0:b}'.format(x)) for x in df[col[1]].values])
+            header = np.array([f'{col[1]}{i}' for i in range(col[0])])
+            newcol = np.zeros((bincol.shape[0], col[0]), dtype=np.int8)
+
+            for i in range(bincol.shape[0]):
+                a = np.array(list(bincol[i]), dtype=np.int8)
+                newcol[i][col[0] - len(a):] = a
+
+            df2 = pd.DataFrame(newcol, columns=header)
+            df.reset_index(drop=True, inplace=True)
+            df = pd.concat([df, df2], axis=1)
+            df.drop(columns=[col[1]], inplace=True)
+        return df
+
     def calculate_per_bucket(self, bucket_col, amount_col, date_col, key_col, month_window):
         self.df.reset_index(drop=True, inplace=True)
         dflocal = self.df[[bucket_col, amount_col, date_col, key_col]].copy()
+
+        if self.labels is None:
+            self.labels = np.unique(dflocal[bucket_col])
 
         month_window = pd.DateOffset(months=month_window)
         arange_labels = np.arange(len(self.labels))
@@ -117,11 +156,12 @@ class CSVManager():
 
             min_month += one_month
 
-        new_cols = np.array([[f'Range{i}Amount', f'Range{i}Count'] for i in arange_labels])
+        new_cols = np.array([[f'Bucket{i}Amount', f'Bucket{i}Count'] for i in arange_labels])
         results = pd.DataFrame(np.array(results), columns=new_cols.flatten())
 
         self.df.drop(labels=new_cols.flatten(), axis=1, inplace=True, errors='ignore')
         self.df = pd.concat([self.df, results], axis=1)
+        self.ppnan(fillna_cols=new_cols.flatten(), fillna_value=-1)
 
     @staticmethod
     def apply_multiprocessing(*args):
@@ -141,33 +181,3 @@ class CSVManager():
             result.extend([mean, count])
 
         return result
-
-
-if __name__ == '__main__':
-    csv = CSVManager()
-    csv.read('InvoicedDocuments_v4.csv', orderby=['DocumentDate'])
-    csv.ppnan(dropna_cols=['ClearingDate'], fillna_value=0)
-
-    csv.cast_to_number(cols=['CustomerRegion', 'PaymentTerms'])
-    csv.cast_to_integer(cols=['InvoicedDocuments', 'PaidDocuments', 'PaidPastDocuments', 'OpenDocuments', 'PastDueDocuments'])
-    csv.cast_to_date(cols=['CustomerLastCreditReview', 'DocumentDate', 'DueDate', 'ClearingDate'])
-
-    csv.minmax_filter(min_cols=['DocumentDate', 'DocumentDate'], max_cols=['DueDate', 'ClearingDate'])
-    csv.extract_days(cols=['DocumentDate', 'DueDate'])
-
-    csv.set_ratio(dividend_cols=['InvoicedAmount', 'PaidAmount', 'PaidPastAmount', 'OpenAmount', 'PastDueAmount'],
-                  divisor_cols=['InvoicedDocuments', 'PaidDocuments', 'PaidPastDocuments', 'OpenDocuments', 'PastDueDocuments'])
-
-    csv.set_daysto(source_cols=['DocumentDate', 'DocumentDate', 'CustomerLastCreditReview'],
-                   target_cols=['DueDate', 'ClearingDate', 'DocumentDate'])
-
-    csv.set_range(bins=list(range(1, 31, 28)), cols=['DaysToDueDate', 'DaysToClearingDate'])
-
-    csv.calculate_per_bucket(bucket_col='DaysToClearingDateRangeCT', amount_col='DocumentAmount',
-                             date_col='DocumentDate', key_col='CustomerKey', month_window=2)
-
-    # train, test = csv.get_data_range(col='DocumentDate', date='2020-08-01', month_window=4)
-
-    # csv.info()
-    # csv.head(20)
-    csv.save(name='InvoicedDocuments_v4_pp.csv')
