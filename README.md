@@ -1,1 +1,1 @@
-# cubricks-beta
+# Cubricks Analytics
