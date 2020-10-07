@@ -32,16 +32,18 @@ def features_selection(train, test, x_column, y_column, threshold=1, random_stat
 
 def _selection(*args):
     train, test, x_column, y_column, random_state, features = args
-    x_train, y_train, x_test, y_test = prepare_data(train, test, y_column, x_column, random_state=seed)
 
-    clf = RandomForestClassifier(n_estimators=75, criterion='entropy', random_state=random_state)
+    train = resample(train, x_column, y_column, SMOTE(sampling_strategy=0.75, random_state=random_state))
+    x_train, y_train, x_test, y_test = prepare_data(train, test, x_column, y_column, random_state=random_state)
+
+    clf = RandomForestClassifier(n_estimators=100, criterion='entropy', class_weight='balanced', random_state=random_state)
     clf.fit(x_train, np.squeeze(y_train))
 
     cr = classification_report(y_test, clf.predict(x_test), output_dict=True, zero_division=True)
     return [cr['macro avg']['f1-score'], features, clf.feature_importances_]
 
 
-f_selected, index_max = features_selection(train, test, x_column, y_column, threshold=12, random_state=seed)
+f_selected, index_max = features_selection(train, test, x_column, y_column, threshold=12, random_state=SEED)
 
 print(f'\n>>> Max f1-score: {f_selected[index_max,0]}, {f_selected[index_max,1]}')
 print(f'\n>>> Attempts:\n{f_selected}')
