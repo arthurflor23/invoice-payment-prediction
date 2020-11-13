@@ -1,0 +1,39 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.hello-world-background,
+.pp-section.ng-scope:hover {
+  background-color: red;
+  color: white;
+}
+
+.media {
+  height: 100%;
+  color: white;
+  align-self: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+/* .qs-toolbar {
+  display: none;
+} */
+
+.qs-toolbar,
+.lui-tab.lui-active,
+.lui-tab.lui-focused,
+.lui-tab:focus {
+  background: blueviolet;
+}
+
+.qs-toolbar span {
+  color: white !important;
+}
+
+.qs-toolbar .lui-tabset .lui-tab .icon-tab .icon-container:hover,
+.qs-toolbar .lui-tabset .lui-tab .icon-tab .tab-dropdown-icon:hover {
+  background-color: violet;
+}
