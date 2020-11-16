@@ -97,6 +97,20 @@ define([], function () {
             appearance: appearance,
             myCustomSection: myCustomSection,
             myMedia: myMedia,
+            MySwitchProp: {
+                type: "boolean",
+                component: "switch",
+                label: "Switch me On",
+                ref: "props.scape",
+                options: [{
+                    value: true,
+                    label: "On"
+                }, {
+                    value: false,
+                    label: "Not On"
+                }],
+                defaultValue: true
+            }
         }
     };
 });

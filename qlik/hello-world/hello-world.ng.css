@@ -37,3 +37,24 @@
 .qs-toolbar .lui-tabset .lui-tab .icon-tab .tab-dropdown-icon:hover {
   background-color: violet;
 }
+
+.qv-mode-edit .extra-button {
+  display: none;
+}
+
+/* .qv-mode-edit .scape { */
+/* width: calc(50% - 4px) !important;
+  height: calc(50% - 4px) !important;
+  left: calc(-1000% + 2px) !important;
+  top: calc(-1000% + 2px) !important; */
+/* } */
+
+
+.navbar {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  background: rgb(248, 248, 248);
+  z-index: 550;
+}
