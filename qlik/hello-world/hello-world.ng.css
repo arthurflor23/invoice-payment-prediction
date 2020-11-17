@@ -1,4 +1,29 @@
-.root {
+/* .cubricks-navbar * {
+  all: initial;
+} */
+
+.cubricks-navbar .qs-toolbar,
+.cubricks-navbar .qs-toolbar span,
+.cubricks-navbar .lui-tab.lui-active,
+.cubricks-navbar .lui-tab.lui-focused,
+.cubricks-navbar .lui-tab:focus,
+.cubricks-navbar .qs-toolbar .lui-tabset .lui-tab .icon-tab .icon-container:hover,
+.cubricks-navbar .qs-toolbar .lui-tabset .lui-tab .icon-tab .tab-dropdown-icon:hover {
+  background-color: blueviolet !important;
+  color: white !important;
+  border: none !important;
+}
+
+.cubricks-navbar .lui-button.lui-buttongroup__button.lui-button--success * {
+  background-color: #009845 !important;
+}
+
+.cubricks-navbar .lui-icon.lui-icon--tick.lui-button__icon:hover {
+  box-shadow: inset 0 -2px rgba(0, 0, 0, .1), inset 0 0 0 250px hsla(0, 0%, 100%, .2);
+  transition: box-shadow .2s ease-out;
+}
+
+.cubricks {
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -16,45 +41,4 @@
   align-self: center;
   background-repeat: no-repeat;
   background-size: contain;
-}
-
-/* .qs-toolbar {
-  display: none;
-} */
-
-.qs-toolbar,
-.lui-tab.lui-active,
-.lui-tab.lui-focused,
-.lui-tab:focus {
-  background: blueviolet;
-}
-
-.qs-toolbar span {
-  color: white !important;
-}
-
-.qs-toolbar .lui-tabset .lui-tab .icon-tab .icon-container:hover,
-.qs-toolbar .lui-tabset .lui-tab .icon-tab .tab-dropdown-icon:hover {
-  background-color: violet;
-}
-
-.qv-mode-edit .extra-button {
-  display: none;
-}
-
-/* .qv-mode-edit .scape { */
-/* width: calc(50% - 4px) !important;
-  height: calc(50% - 4px) !important;
-  left: calc(-1000% + 2px) !important;
-  top: calc(-1000% + 2px) !important; */
-/* } */
-
-
-.navbar {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  background: rgb(248, 248, 248);
-  z-index: 550;
 }
