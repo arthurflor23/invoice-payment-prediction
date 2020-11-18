@@ -1,12 +1,15 @@
-<div qv-extension class="cubricks">
-  <div class='hello-world-background'>
-    This is my message: {{ layout.props.section1.item1 }}
-  </div>
+<div qv-extension id="{{ key + '-navbar' }}">
+  <lui-button ng-click="changePath('overview', '_blank')">Home _blank</lui-button>
+</div>
 
-  <div class='media' ng-style="{'background-image': 'url(' + layout.props.myMedia + ')'}">
-    Media: {{ layout.props.myMedia }}
-  </div>
+<div qv-extension id="{{ key + '-extension' }}">
 
-  <lui-button ng-click="scape()">Edit mode</lui-button>
+</div>
 
+<div class="lui-buttongroup">
+  <lui-button ng-click="changePath('overview', '_blank')">Home _blank</lui-button>
+  <lui-button ng-click="changePath('overview', '_self')">Home _self</lui-button>
+  <lui-button ng-click="navigation.nextSheet()">Next sheet</lui-button>
+	<lui-button ng-click="navigation.prevSheet()">Previous sheet</lui-button>
+	<lui-button ng-click="qlik.navigation.setMode('edit')">Edit mode</lui-button>
 </div>
