@@ -33,34 +33,23 @@ define([
     // }
 
     return {
-      support: {
-        export: true,
-        exportData: true,
-        snapshot: true,
-      },
       definition: props,
       template: template,
       style: style,
       controller: ['$scope', '$compile', function ($scope, $compile) {
-        // $scope.component.model.Validated.bind(function () {
-        //   scape($scope.layout.props.scape, $scope.layout.qInfo.qId);
-        // });
 
         angular.element(`#qs-toolbar-container`).addClass('cubricks-navbar');
         angular.element(`#qs-toolbar-container`).addClass('navbar-cubricks');
-
-        $scope.scape = function () {
-          console.log(' TEMP ');
-        }
 
         // scape($scope.layout.props.scape, $scope.layout.qInfo.qId);
         // console.log($scope.layout);
 
         var navbar = angular.element(`<div id="cubricks-navbar" class="navbar"></div>`);
 
-        // var btn = angular.copy(angular.element(`[tid='2f7a7e']`));
-        // navbar.append($compile(btn)($scope));
+        var btn = angular.copy(angular.element(`[tid='2f7a7e']`));
+        // var btn = angular.element(`[tid='2f7a7e']`);
 
+        navbar.append($compile(btn)($scope));
 
         // var myClone = element.clone();
         // myClone[0].innerHTML = element[0].srcHTML;
@@ -96,8 +85,35 @@ define([
         container.append($compile(navbar)($scope));
 
 
+        $scope.scape = function () {
+          console.log(' TEMP ');
+        }
+
+
+        $scope.component.model.Validated.bind(function () {
+          // scape($scope.layout.props.scape, $scope.layout.qInfo.qId);
+          console.log($scope.layout.props);
+
+
+          // var style = document.createElement('style');
+          // style.setAttribute("id", "cubricks");
+
+          // style.innerHTML = `
+          // .cubricks-temp {
+          //   color: ${$scope.layout.props.section1?.item2 || 'red'} !important;
+          // }`;
+          
+          // angular.element('#cubricks').remove();
+          // angular.element('head')[0].appendChild(style);
+
+
+          // var element = angular.element(".lui-icon.lui-icon--more-rounded.lui-fade-button__icon");
+          // element.addClass('cubricks-temp');
+
+        });
 
         $scope.$on('$destroy', function () {
+          $scope.component.model.Validated.unbind();
 
           angular.forEach($("[class*='cubricks']"), (element) => {
             angular.element(element).removeClass((_, classes) => {
@@ -108,7 +124,6 @@ define([
           angular.forEach($("[id*='cubricks']"), (element) => {
             angular.element(element).remove();
           });
-
         });
 
       }]

@@ -9,13 +9,13 @@
 .cubricks-navbar .lui-tab:focus,
 .cubricks-navbar .qs-toolbar .lui-tabset .lui-tab .icon-tab .icon-container:hover,
 .cubricks-navbar .qs-toolbar .lui-tabset .lui-tab .icon-tab .tab-dropdown-icon:hover {
-  background-color: blueviolet !important;
-  color: white !important;
-  border: none !important;
+  background-color: blueviolet;
+  color: white;
+  border: none;
 }
 
 .cubricks-navbar .lui-button.lui-buttongroup__button.lui-button--success * {
-  background-color: #009845 !important;
+  background-color: #009845;
 }
 
 .cubricks-navbar .lui-icon.lui-icon--tick.lui-button__icon:hover {
