@@ -6,10 +6,10 @@ import numpy as np
 import pandas as pd
 
 
-def fx(x, w=2):
+def fx(x, window_size=2):
     due_date = pd.to_datetime(x[1])
     due_date_weekday = pd.DatetimeIndex([due_date]).weekday.values[0]
-    past_due_date = due_date - pd.DateOffset(months=w)
+    past_due_date = due_date - pd.DateOffset(months=window_size)
 
     c_data = df[df['CustomerKey'] == x[0]]
 
@@ -77,7 +77,7 @@ df['DueDateWeekDay'] = pd.DatetimeIndex(df['DueDate']).weekday
 
 features = []
 with multiprocessing.Pool(multiprocessing.cpu_count()) as pool:
-    for x in tqdm(pool.imap(partial(fx, w=2), df[['CustomerKey', 'DueDate']].values), total=len(df)):
+    for x in tqdm(pool.imap(partial(fx, window_size=2), df[['CustomerKey', 'DueDate']].values), total=len(df)):
         features.append(x)
     pool.close()
     pool.join()
