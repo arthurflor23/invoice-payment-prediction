@@ -7,18 +7,17 @@ import pandas as pd
 
 
 def fx(x, window_size=120):
-    due_date = pd.to_datetime(x[1])
-    due_date_weekday = pd.DatetimeIndex([due_date]).weekday.values[0]
-    past_due_date = due_date - pd.DateOffset(months=window_size)
+    doc_date = pd.to_datetime(x[1])
+    due_date = pd.to_datetime(x[2])
+    cle_date = pd.to_datetime(x[3])
 
     c_data = df[df['CustomerKey'] == x[0]]
+
+    past_due_date = due_date - pd.DateOffset(months=window_size)
 
     historic = c_data[(c_data['DueDate'] >= past_due_date) &
                       (c_data['DueDate'] < due_date)]
     historic_late = historic[historic['PaidLate'] == 1]
-
-    weekday = historic[historic['DueDateWeekDay'] == due_date_weekday]
-    weekday_late = weekday[weekday['PaidLate'] == 1]
 
     outstanding = c_data[(c_data['DocumentDate'] >= past_due_date) &
                          (c_data['DocumentDate'] < due_date) &
@@ -30,43 +29,31 @@ def fx(x, window_size=120):
             'CustomerKey': x[0],
             'DueDate': due_date,
 
-            'DaysToDueDateMD': historic['DaysToDueDate'].median(),
+            'DaysLateMad': historic['DaysLate'].mad(),
+            'OSInvoiceDaysLateMad': outstanding['DaysLate'].mad(),
 
-            'WDPaidCount': weekday['InvoiceCount'].sum(),
-            'WDPaidLateCount': weekday_late['InvoiceCount'].sum(),
-            'WDPaidLateCountR': np.true_divide(weekday_late['InvoiceCount'].sum(),
-                                               weekday['InvoiceCount'].sum()),
+            'DaysLateMedian': historic['DaysLate'].median(),
+            'OSInvoiceDaysLateMedian': outstanding['DaysLate'].median(),
 
-            'WDPaidAmount': weekday['InvoiceAmount'].sum(),
-            'WDPaidLateAmount': weekday_late['InvoiceAmount'].sum(),
-            'WDPaidLateAmountR': np.true_divide(weekday_late['InvoiceAmount'].sum(),
-                                                weekday['InvoiceAmount'].sum()),
+            'TermDays': (due_date - doc_date).days,
 
-            'WDDaysLateMD': weekday['DaysLate'].median(),
+            'PaidCount': historic['Count'].sum(),
+            'PaidLateCount': historic_late['Count'].sum(),
+            'PaidLateCountRatio': np.true_divide(historic_late['Count'].sum(), historic['Count'].sum()),
 
-            'TTPaidCount': historic['InvoiceCount'].sum(),
-            'TTPaidLateCount': historic_late['InvoiceCount'].sum(),
-            'TTPaidLateCountR': np.true_divide(historic_late['InvoiceCount'].sum(),
-                                               historic['InvoiceCount'].sum()),
+            'PaidAmount': historic['Amount'].sum(),
+            'PaidLateAmount': historic_late['Amount'].sum(),
+            'PaidLateAmountRatio': np.true_divide(historic_late['Amount'].sum(), historic['Amount'].sum()),
 
-            'TTPaidAmount': historic['InvoiceAmount'].sum(),
-            'TTPaidLateAmount': historic_late['InvoiceAmount'].sum(),
-            'TTPaidLateAmountR': np.true_divide(historic_late['InvoiceAmount'].sum(),
-                                                historic['InvoiceAmount'].sum()),
+            'OSInvoiceCount': outstanding['Count'].sum(),
+            'OSInvoiceLateCount': outstanding_late['Count'].sum(),
+            'OSInvoiceLateCountRatio': np.true_divide(outstanding_late['Count'].sum(), outstanding['Count'].sum()),
 
-            'TTDaysLateMD': historic['DaysLate'].median(),
+            'OSInvoiceAmount': outstanding['Amount'].sum(),
+            'OSInvoiceLateAmount': outstanding_late['Amount'].sum(),
+            'OSInvoiceLateAmountRatio': np.true_divide(outstanding_late['Amount'].sum(), outstanding['Amount'].sum()),
 
-            'TTOSCount': outstanding['InvoiceCount'].sum(),
-            'TTOSLateCount': outstanding_late['InvoiceCount'].sum(),
-            'TTOSLateCountR': np.true_divide(outstanding_late['InvoiceCount'].sum(),
-                                             outstanding['InvoiceCount'].sum()),
-
-            'TTOSAmount': outstanding['InvoiceAmount'].sum(),
-            'TTOSLateAmount': outstanding_late['InvoiceAmount'].sum(),
-            'TTOSLateAmountR': np.true_divide(outstanding_late['InvoiceAmount'].sum(),
-                                              outstanding['InvoiceAmount'].sum()),
-
-            'TTOSDaysLateMD': outstanding['DaysLate'].median(),
+            'PaymentDays': (cle_date - due_date).days,
         }
 
     for k in features.keys():
@@ -77,21 +64,20 @@ def fx(x, window_size=120):
 
 df = pd.read_csv('./data/base2.csv', parse_dates=['DocumentDate', 'DueDate', 'ClearingDate'], low_memory=False)
 
-df['DaysLate'] = ((df['ClearingDate'] - df['DueDate']).astype('timedelta64[D]')).astype(int).clip(lower=0)
+df['DaysLate'] = ((df['ClearingDate'] - df['DueDate']).astype('timedelta64[D]')).astype(int)
 df['PaidLate'] = (df['DaysLate'] > 0).astype(int)
-
-df['DaysToDueDate'] = ((df['DueDate'] - df['DocumentDate']).astype('timedelta64[D]')).astype(int)
-df['DueDateWeekDay'] = pd.DatetimeIndex(df['DueDate']).weekday
 
 features = []
 with multiprocessing.Pool(multiprocessing.cpu_count()) as pool:
-    for x in tqdm(pool.imap(partial(fx), df[['CustomerKey', 'DueDate']].values), total=len(df)):
+    cols = ['CustomerKey', 'DocumentDate', 'DueDate', 'ClearingDate']
+
+    for x in tqdm(pool.imap(partial(fx), df[cols].values), total=len(df)):
         features.append(x)
     pool.close()
     pool.join()
 
 df = pd.merge(df, pd.DataFrame(features), how='left', on=['CustomerKey', 'DueDate'])
-df.drop(['PaidLate', 'DaysLate', 'DueDateWeekDay'], axis=1, inplace=True)
+df.drop(['PaidLate', 'DaysLate'], axis=1, inplace=True)
 
 df.sort_values(by=['DueDate'], ascending=True, ignore_index=True, inplace=True)
 df.to_csv('./data/base3.csv', index=False)
