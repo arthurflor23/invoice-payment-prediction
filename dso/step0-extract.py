@@ -29,6 +29,7 @@ def load_dataset(filename):
         df[col] = pd.to_numeric(df[col])
 
     df = df[(df['DocumentDate'] < df['DueDate']) & (df['DocumentDate'] < df['ClearingDate'])]
+    df = df[df['InvoicedAmount'] > 1000]
 
     return df
 
