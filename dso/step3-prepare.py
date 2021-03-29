@@ -14,6 +14,9 @@ df.loc[df['CustomerKey'].isin(vip_customers), 'PartnerCustomer'] = 1
 df['DaysToDueDate'] = (df['DueDate'] - df['DocumentDate']).dt.days
 df['DaysToEndMonth'] = ((df['DueDate'] + pd.offsets.MonthEnd(0)) - df['DueDate']).dt.days
 
+df['WeekdayDueDate'] = df['DueDate'].dt.weekday
+df['WeekdayEndMonth'] = (df['DueDate'] + pd.offsets.MonthEnd(0)).dt.weekday
+
 
 df['DaysLate'] = ((df['ClearingDate'] - df['DueDate']).dt.days).clip(lower=0)
 df['DaysLateAfterMonth'] = (df['DaysLate'] - df['DaysToEndMonth']).clip(lower=0)
