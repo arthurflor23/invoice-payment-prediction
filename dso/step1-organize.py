@@ -31,16 +31,16 @@ df_gp = merge(df_gp, group(df[df['PaidLate'] == 1]).size().reset_index(name='OSI
 
 df_gp['OSInvoiceCount'] = df_gp['OSInvoiceCount'].fillna(0).astype(int)
 
-df_gp['OSInvoiceCountRatio'] = df_gp['OSInvoiceCount'] / df_gp['InvoiceCount']
-df_gp['OSInvoiceCountRatio'] = df_gp['OSInvoiceCountRatio'].fillna(0)
+df_gp['R_OSInvoiceCount'] = df_gp['OSInvoiceCount'] / df_gp['InvoiceCount']
+df_gp['R_OSInvoiceCount'] = df_gp['R_OSInvoiceCount'].fillna(0)
 
 df_gp = merge(df_gp, group(df)['InvoicedAmount'].sum().reset_index(name='InvoiceAmount'))
 df_gp = merge(df_gp, group(df[df['PaidLate'] == 1])['InvoicedAmount'].sum().reset_index(name='OSInvoiceAmount'))
 
 df_gp['OSInvoiceAmount'] = df_gp['OSInvoiceAmount'].fillna(0)
 
-df_gp['OSInvoiceAmountRatio'] = df_gp['OSInvoiceAmount'] / df_gp['InvoiceAmount']
-df_gp['OSInvoiceAmountRatio'] = df_gp['OSInvoiceAmountRatio'].fillna(0)
+df_gp['R_OSInvoiceAmount'] = df_gp['OSInvoiceAmount'] / df_gp['InvoiceAmount']
+df_gp['R_OSInvoiceAmount'] = df_gp['R_OSInvoiceAmount'].fillna(0)
 
 print('Final size', len(df_gp))
 
