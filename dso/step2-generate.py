@@ -12,11 +12,14 @@ def fx(x, window_size=120):
 
     c_data = df[df['CustomerKey'] == x[0]]
 
-    historic = c_data[(c_data['DueDate'] >= past_due_date) & (c_data['DueDate'] < due_date)]
+    historic = c_data[(c_data['DueDate'] >= past_due_date) &
+                      (c_data['DueDate'] < due_date)]
     historic_late = historic[historic['PaidLate'] == 1]
 
-    outstanding = c_data[(c_data['DocumentDate'] >= past_due_date) & (c_data['DocumentDate'] < due_date) &
-                         (c_data['ClearingDate'] > due_date)]
+    outstanding = c_data[(c_data['DocumentDate'] >= past_due_date) &
+                         (c_data['DocumentDate'] < due_date) &
+                         (c_data['ClearingDate'] > due_date) &
+                         (c_data['DueDate'] != due_date)]
     outstanding_late = outstanding[outstanding['PaidLate'] == 1]
 
     with np.errstate(divide='ignore', invalid='ignore'):
