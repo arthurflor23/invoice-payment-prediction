@@ -14,16 +14,21 @@ df.loc[df['CustomerKey'].isin(vip_customers), 'PartnerCustomer'] = 1
 df['DaysToDueDate'] = (df['DueDate'] - df['DocumentDate']).dt.days
 df['DaysToEndMonth'] = ((df['DueDate'] + pd.offsets.MonthEnd(0)) - df['DueDate']).dt.days
 
-df['WeekdayDueDate'] = df['DueDate'].dt.weekday
 df['WeekdayEndMonth'] = (df['DueDate'] + pd.offsets.MonthEnd(0)).dt.weekday
 
 
 df['DaysLate'] = ((df['ClearingDate'] - df['DueDate']).dt.days).clip(lower=0)
-df['DaysLateAfterMonth'] = (df['DaysLate'] - df['DaysToEndMonth']).clip(lower=0)
+df['DaysLateAM'] = (df['DaysLate'] - df['DaysToEndMonth']).clip(lower=0)
+
+df['PaidLate'] = 0
+df.loc[df['DaysLate'] > 0, 'PaidLate'] = 1
+
+df['PaidLateAM'] = 0
+df.loc[df['DaysLateAM'] > 0, 'PaidLateAM'] = 1
 
 df['PaymentCategory'] = 0
-df.loc[(df['DaysLate'] > 0) & (df['DaysLateAfterMonth'] <= 0), 'PaymentCategory'] = 1
-df.loc[(df['DaysLate'] > 0) & (df['DaysLateAfterMonth'] > 0), 'PaymentCategory'] = 2
+df.loc[(df['DaysLate'] > 0) & (df['DaysLateAM'] <= 0), 'PaymentCategory'] = 1
+df.loc[(df['DaysLate'] > 0) & (df['DaysLateAM'] > 0), 'PaymentCategory'] = 2
 
 
 dfs = df.drop(['CustomerKey', 'DocumentDate', 'ClearingDate', 'DueDate'], axis=1)
