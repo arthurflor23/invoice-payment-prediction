@@ -14,7 +14,10 @@ def merge(x1, x2):
 
 
 df = pd.read_csv('./data/base1.csv', parse_dates=['DocumentDate', 'DueDate', 'ClearingDate'], low_memory=False)
-df['PaidLate'] = ((df['ClearingDate'] - df['DueDate']).astype('timedelta64[D]') > 0).astype(int)
+
+df['OS'] = ((df['ClearingDate'] - (df['DueDate'] - pd.to_timedelta(arg=df['DueDate'].dt.weekday, unit='D')))
+            .astype('timedelta64[D]') > 0).astype(int)
+
 
 df_doc = order(group(df)['DocumentDate'].min().reset_index())
 df_cle = order(group(df)['ClearingDate'].max().reset_index())
@@ -27,7 +30,7 @@ df_gp = pd.DataFrame({
 })
 
 df_gp = merge(df_gp, group(df).size().reset_index(name='InvoiceCount'))
-df_gp = merge(df_gp, group(df[df['PaidLate'] == 1]).size().reset_index(name='OSInvoiceCount'))
+df_gp = merge(df_gp, group(df[df['OS'] == 1]).size().reset_index(name='OSInvoiceCount'))
 
 df_gp['OSInvoiceCount'] = df_gp['OSInvoiceCount'].fillna(0).astype(int)
 
@@ -35,7 +38,7 @@ df_gp['R_OSInvoiceCount'] = df_gp['OSInvoiceCount'] / df_gp['InvoiceCount']
 df_gp['R_OSInvoiceCount'] = df_gp['R_OSInvoiceCount'].fillna(0)
 
 df_gp = merge(df_gp, group(df)['InvoicedAmount'].sum().reset_index(name='InvoiceAmount'))
-df_gp = merge(df_gp, group(df[df['PaidLate'] == 1])['InvoicedAmount'].sum().reset_index(name='OSInvoiceAmount'))
+df_gp = merge(df_gp, group(df[df['OS'] == 1])['InvoicedAmount'].sum().reset_index(name='OSInvoiceAmount'))
 
 df_gp['OSInvoiceAmount'] = df_gp['OSInvoiceAmount'].fillna(0)
 
