@@ -1,0 +1,12 @@
+{
+    "RandomForestClassifier": {
+        "score": 0.8357652905278744,
+        "params": {
+            "criterion": "entropy",
+            "max_features": "sqrt",
+            "min_samples_split": 2,
+            "min_weight_fraction_leaf": 0.0,
+            "n_estimators": 5
+        }
+    }
+}
