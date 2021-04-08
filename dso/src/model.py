@@ -1,4 +1,5 @@
 from sklearn.metrics import confusion_matrix, classification_report, mean_squared_error
+from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
 from sklearn.base import is_classifier, is_regressor, clone
 from sklearn.preprocessing import RobustScaler
 
@@ -68,14 +69,18 @@ class Dataset():
 
 
 class Model():
-    def __init__(self, estimator, step=''):
+    def __init__(self, estimator, step):
         self.module = '.'.join(estimator.split('.')[:2])
         self.estimator = '.'.join(estimator.split('.')[2:])
         self.model = getattr(importlib.import_module(self.module), self.estimator)
 
-        self.gridsearch = json.load(open('gridsearch.json')) if os.path.exists('gridsearch.json') else None
-        self.hyper = json.load(open('hyperparameters.json')) if os.path.exists('hyperparameters.json') else {}
+        self.searchfile = 'gridsearch.json'
+        self.hyperfile = f'hyperparameters_{step}.json'
 
+        self.gridsearch = json.load(open(self.searchfile)) if os.path.exists(self.searchfile) else None
+        self.hyper = json.load(open(self.hyperfile)) if os.path.exists(self.hyperfile) else {}
+
+        self.cmap = 'Blues' if step == 1 else 'YlOrBr'
         self.output = os.path.join('..', f'output{step}', self.estimator)
 
     def tunning(self, x_train, y_train):
@@ -83,16 +88,24 @@ class Model():
         param_grid = self.gridsearch[self.estimator] if self.estimator in self.gridsearch.keys() else {}
 
         if is_classifier(self.model):
-            cv = StratifiedShuffleSplit(n_splits=1, train_size=0.8, random_state=SEED)
-            model = self.model(class_weight='balanced', random_state=SEED)
             scoring = 'f1_macro'
+            md = self.model(random_state=SEED)
+            cv = StratifiedShuffleSplit(n_splits=1, train_size=0.8, random_state=SEED)
+
+            if 'base_estimator' in md.get_params() and md.get_params()['base_estimator'] is None:
+                params = {'base_estimator': DecisionTreeClassifier(class_weight='balanced', random_state=SEED)}
+                md = md.set_params(**params)
 
         elif is_regressor(self.model):
-            cv = ShuffleSplit(n_splits=1, train_size=0.8, random_state=SEED)
-            model = self.model(random_state=SEED)
             scoring = 'neg_mean_squared_error'
+            md = self.model(random_state=SEED)
+            cv = ShuffleSplit(n_splits=1, train_size=0.8, random_state=SEED)
 
-        grid = GridSearchCV(estimator=model, param_grid=param_grid, cv=cv, scoring=scoring, n_jobs=-1, verbose=10)
+            if 'base_estimator' in md.get_params() and md.get_params()['base_estimator'] is None:
+                params = {'base_estimator': DecisionTreeRegressor(random_state=SEED)}
+                md = md.set_params(**params)
+
+        grid = GridSearchCV(md, param_grid, cv=cv, scoring=scoring, n_jobs=-1, verbose=3)
         grid.fit(x_train, y_train)
 
         print('Best score:', grid.best_score_)
@@ -100,14 +113,14 @@ class Model():
 
         self.hyper[self.estimator] = {'score': grid.best_score_, 'params': grid.best_params_}
 
-        with open('hyperparameters.json', 'w') as f:
+        with open(self.hyperfile, 'w') as f:
             json.dump(self.hyper, f, indent=4)
 
     def test(self, x_test, y_test):
         model = pickle.load(open(os.path.join(self.output, 'model.sav'), 'rb'))
 
         pd_test = model.predict(x_test)
-        self._report(y_test, pd_test, prefix='test', cmap='YlOrBr')
+        self._report(y_test, pd_test, prefix='test', cmap=self.cmap)
 
     def train(self, x_train, y_train):
         if self.estimator in self.hyper.keys():
@@ -116,11 +129,12 @@ class Model():
             model = self.model()
 
         gt_train, pd_train, model = self._cross_validation(model, x_train, y_train, run_only_once=True)
-        self._report(gt_train, pd_train, model, prefix='train', cmap='Blues')
+        self._report(gt_train, pd_train, model, prefix='train', cmap=self.cmap)
 
     def _cross_validation(self, model, x, y, n_splits=10, n_repeats=3, run_only_once=False):
         if is_classifier(model):
             rskf = RepeatedStratifiedKFold(n_splits=n_splits, n_repeats=n_repeats, random_state=SEED)
+
         elif is_regressor(model):
             rskf = RepeatedKFold(n_splits=n_splits, n_repeats=n_repeats, random_state=SEED)
 
@@ -250,7 +264,7 @@ if __name__ == "__main__":
     if arg.action == 'tunning':
         dataset.load(step=arg.step, train=True, test=False)
 
-        model = Model(arg.estimator)
+        model = Model(arg.estimator, step=arg.step)
         model.tunning(dataset.x_train, dataset.y_train)
 
     elif arg.action == 'train':
