@@ -93,8 +93,8 @@ class Model():
             cv = StratifiedShuffleSplit(n_splits=1, train_size=0.8, random_state=SEED)
 
             if 'base_estimator' in md.get_params() and md.get_params()['base_estimator'] is None:
-                params = {'base_estimator': DecisionTreeClassifier(class_weight='balanced', random_state=SEED)}
-                md = md.set_params(**params)
+                base_param = {'base_estimator': DecisionTreeClassifier(class_weight='balanced', random_state=SEED)}
+                md = md.set_params(**base_param)
 
         elif is_regressor(self.model):
             scoring = 'neg_mean_squared_error'
@@ -102,8 +102,8 @@ class Model():
             cv = ShuffleSplit(n_splits=1, train_size=0.8, random_state=SEED)
 
             if 'base_estimator' in md.get_params() and md.get_params()['base_estimator'] is None:
-                params = {'base_estimator': DecisionTreeRegressor(random_state=SEED)}
-                md = md.set_params(**params)
+                base_param = {'base_estimator': DecisionTreeRegressor(random_state=SEED)}
+                md = md.set_params(**base_param)
 
         grid = GridSearchCV(md, param_grid, cv=cv, scoring=scoring, n_jobs=-1, verbose=3)
         grid.fit(x_train, y_train)
@@ -123,12 +123,20 @@ class Model():
         self._report(y_test, pd_test, prefix='test', cmap=self.cmap)
 
     def train(self, x_train, y_train):
-        if self.estimator in self.hyper.keys():
-            model = self.model(**self.hyper[self.estimator]['params'])
-        else:
-            model = self.model()
+        md = self.model(random_state=SEED)
 
-        gt_train, pd_train, model = self._cross_validation(model, x_train, y_train, run_only_once=True)
+        if 'base_estimator' in md.get_params() and md.get_params()['base_estimator'] is None:
+            if is_classifier(self.model):
+                base_param = {'base_estimator': DecisionTreeClassifier(random_state=SEED)}
+            elif is_regressor(self.model):
+                base_param = {'base_estimator': DecisionTreeRegressor(random_state=SEED)}
+
+        if self.estimator in self.hyper.keys():
+            md = md.set_params(**base_param)
+
+        md.set_params(**self.hyper[self.estimator]['params'])
+
+        gt_train, pd_train, model = self._cross_validation(md, x_train, y_train, run_only_once=True)
         self._report(gt_train, pd_train, model, prefix='train', cmap=self.cmap)
 
     def _cross_validation(self, model, x, y, n_splits=10, n_repeats=3, run_only_once=False):
