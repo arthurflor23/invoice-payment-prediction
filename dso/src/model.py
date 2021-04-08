@@ -97,7 +97,7 @@ class Model():
                 md = md.set_params(**base_param)
 
         elif is_regressor(self.model):
-            scoring = 'neg_mean_squared_error'
+            scoring = 'neg_root_mean_squared_error'
             md = self.model(random_state=SEED)
             cv = ShuffleSplit(n_splits=1, train_size=0.8, random_state=SEED)
 
@@ -117,10 +117,10 @@ class Model():
             json.dump(self.hyper, f, indent=4)
 
     def test(self, x_test, y_test):
-        model = pickle.load(open(os.path.join(self.output, 'model.sav'), 'rb'))
+        md = pickle.load(open(os.path.join(self.output, 'model.sav'), 'rb'))
 
-        pd_test = model.predict(x_test)
-        self._report(y_test, pd_test, prefix='test', cmap=self.cmap)
+        pd_test = md.predict(x_test)
+        self._report(y_test, pd_test, md, prefix='test', cmap=self.cmap)
 
     def train(self, x_train, y_train):
         md = self.model(random_state=SEED)
@@ -136,8 +136,8 @@ class Model():
 
         md.set_params(**self.hyper[self.estimator]['params'])
 
-        gt_train, pd_train, model = self._cross_validation(md, x_train, y_train, run_only_once=True)
-        self._report(gt_train, pd_train, model, prefix='train', cmap=self.cmap)
+        gt_train, pd_train, md = self._cross_validation(md, x_train, y_train, run_only_once=True)
+        self._report(gt_train, pd_train, md, prefix='train', cmap=self.cmap)
 
     def _cross_validation(self, model, x, y, n_splits=10, n_repeats=3, run_only_once=False):
         if is_classifier(model):
