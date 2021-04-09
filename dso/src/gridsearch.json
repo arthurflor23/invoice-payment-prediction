@@ -226,8 +226,8 @@
             "gini"
         ],
         "max_samples": [
-            0.8,
-            1.0
+            null,
+            0.8
         ],
         "sampling_strategy": [
             0.75,
@@ -251,8 +251,8 @@
             15
         ],
         "max_samples": [
-            0.8,
-            1.0
+            null,
+            0.8
         ],
         "min_samples_split": [
             2,
@@ -292,6 +292,102 @@
             1e-4,
             1e-8,
             1e-10
+        ]
+    },
+    "XGBClassifier": {
+        "n_estimators": [
+            15
+        ],
+        "learning_rate": [
+            1,
+            0.1,
+            0.01,
+            0.001
+        ], 
+        "booster": [
+            "gbtree",
+            "gblinear",
+            "dart"
+        ],
+        "gamma": [
+            0,
+            0.1,
+            0.2
+        ],
+        "scale_pos_weight": [
+            0.8,
+            0.9,
+            1.0
+        ],
+        "reg_alpha": [
+            0,
+            1e-2,
+            1,
+            1e1
+        ],
+        "reg_lambda": [
+            0,
+            1e-2,
+            1,
+            1e1
+        ],
+        "gamma": [
+            0,
+            0.1,
+            0.2
+        ],
+        "min_child_weight": [
+            0,
+            0.5,
+            1
+        ]
+    },
+    "XGBRegressor": {
+        "n_estimators": [
+            15
+        ],
+        "learning_rate": [
+            1,
+            0.1,
+            0.01,
+            0.001
+        ], 
+        "booster": [
+            "gbtree",
+            "gblinear",
+            "dart"
+        ],
+        "gamma": [
+            0,
+            0.1,
+            0.2
+        ],
+        "scale_pos_weight": [
+            0.8,
+            0.9,
+            1.0
+        ],
+        "reg_alpha": [
+            0,
+            1e-2,
+            1,
+            1e1
+        ],
+        "reg_lambda": [
+            0,
+            1e-2,
+            1,
+            1e1
+        ],
+        "gamma": [
+            0,
+            0.1,
+            0.2
+        ],
+        "min_child_weight": [
+            0,
+            0.5,
+            1
         ]
     }
 }
