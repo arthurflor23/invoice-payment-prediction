@@ -1,7 +1,7 @@
 {
     "AdaBoostClassifier": {
         "n_estimators": [
-            10
+            15
         ],
         "learning_rate": [
             1,
@@ -28,7 +28,7 @@
     },
     "AdaBoostRegressor": {
         "n_estimators": [
-            10
+            15
         ],
         "learning_rate": [
             1,
@@ -36,15 +36,32 @@
             0.01,
             0.001
         ],
-        "loss": [
-            "linear",
-            "square",
-            "exponential"
+        "base_estimator__criterion": [
+            "friedman_mse",
+            "mse"
+        ],
+        "base_estimator__min_samples_split": [
+            2,
+            4,
+            8,
+            10
+        ],
+        "base_estimator__min_weight_fraction_leaf": [
+            0.0,
+            1e-4,
+            1e-8,
+            1e-10
         ]
     },
     "BaggingClassifier": {
         "n_estimators": [
-            10
+            15
+        ],
+        "max_samples": [
+            0.4,
+            0.6,
+            0.8,
+            1.0
         ],
         "base_estimator__criterion": [
             "entropy",
@@ -65,33 +82,15 @@
     },
     "BalancedBaggingClassifier": {
         "n_estimators": [
-            10
+            15
         ],
-        "criterion": [
-            "entropy",
-            "gini"
+        "max_samples": [
+            0.8,
+            1.0
         ],
         "sampling_strategy": [
-            "auto",
-            0.5,
-            0.75
-        ],
-        "min_samples_split": [
-            2,
-            4,
-            8,
-            10
-        ],
-        "min_weight_fraction_leaf": [
-            0.0,
-            1e-4,
-            1e-8,
-            1e-10
-        ]
-    },
-    "BaggingRegressor": {
-        "n_estimators": [
-            10
+            0.75,
+            "auto"
         ],
         "base_estimator__criterion": [
             "entropy",
@@ -110,9 +109,36 @@
             1e-10
         ]
     },
+    "BaggingRegressor": {
+        "n_estimators": [
+            15
+        ],
+        "max_samples": [
+            0.4,
+            0.6,
+            0.8,
+            1.0
+        ],
+        "base_estimator__criterion": [
+            "friedman_mse",
+            "mse"
+        ],
+        "base_estimator__min_samples_split": [
+            2,
+            4,
+            8,
+            10
+        ],
+        "base_estimator__min_weight_fraction_leaf": [
+            0.0,
+            1e-4,
+            1e-8,
+            1e-10
+        ]
+    },
     "GradientBoostingClassifier": {
         "n_estimators": [
-            10
+            15
         ],
         "learning_rate": [
             1,
@@ -120,25 +146,26 @@
             0.01,
             0.001
         ],
+        "criterion": [
+            "friedman_mse",
+            "mse"
+        ],
         "min_samples_split": [
             2,
             4,
             8,
             10
         ],
-        "max_depth": [
-            3,
-            5,
-            7
-        ],
-        "loss": [
-            "deviance",
-            "exponential"
+        "min_weight_fraction_leaf": [
+            0.0,
+            1e-4,
+            1e-8,
+            1e-10
         ]
     },
     "GradientBoostingRegressor": {
         "n_estimators": [
-            10
+            15
         ],
         "learning_rate": [
             1,
@@ -146,26 +173,29 @@
             0.01,
             0.001
         ],
+        "criterion": [
+            "friedman_mse",
+            "mse"
+        ],
         "min_samples_split": [
             2,
             4,
             8,
             10
         ],
-        "max_depth": [
-            3,
-            5,
-            7
-        ],
-        "loss": [
-            "friedman_mse",
-            "mse",
-            "mae"
+        "min_weight_fraction_leaf": [
+            0.0,
+            1e-4,
+            1e-8,
+            1e-10
         ]
     },
     "RandomForestClassifier": {
         "n_estimators": [
-            10
+            15
+        ],
+        "class_weight": [
+            "balanced"
         ],
         "criterion": [
             "entropy",
@@ -182,23 +212,26 @@
             1e-4,
             1e-8,
             1e-10
-        ],
-        "class_weight": [
-            "balanced"
         ]
     },
     "BalancedRandomForestClassifier": {
         "n_estimators": [
-            10
+            15
+        ],
+        "class_weight": [
+            "balanced"
         ],
         "criterion": [
             "entropy",
             "gini"
         ],
+        "max_samples": [
+            0.8,
+            1.0
+        ],
         "sampling_strategy": [
-            "auto",
-            0.5,
-            0.75
+            0.75,
+            "auto"
         ],
         "min_samples_split": [
             2,
@@ -211,18 +244,15 @@
             1e-4,
             1e-8,
             1e-10
-        ],
-        "class_weight": [
-            "balanced"
         ]
     },
     "RandomForestRegressor": {
         "n_estimators": [
-            10
+            15
         ],
-        "criterion": [
-            "mse",
-            "mae"
+        "max_samples": [
+            0.8,
+            1.0
         ],
         "min_samples_split": [
             2,
@@ -239,7 +269,7 @@
     },
     "RUSBoostClassifier": {
         "n_estimators": [
-            10
+            15
         ],
         "learning_rate": [
             1,
@@ -248,9 +278,8 @@
             0.001
         ],
         "sampling_strategy": [
-            "auto",
-            0.5,
-            0.75
+            0.75,
+            "auto"
         ],
         "base_estimator__min_samples_split": [
             2,
