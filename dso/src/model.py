@@ -71,8 +71,8 @@ class Dataset():
 
 class Model():
     def __init__(self, estimator, step):
-        self.module = '.'.join(estimator.split('.')[:2])
-        self.estimator = '.'.join(estimator.split('.')[2:])
+        self.module = '.'.join(estimator.split('.')[:-1])
+        self.estimator = estimator.split('.')[-1]
         self.model = getattr(importlib.import_module(self.module), self.estimator)
 
         self.searchfile = 'gridsearch.json'
