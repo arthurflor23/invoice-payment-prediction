@@ -298,21 +298,22 @@
         "n_estimators": [
             15
         ],
+        "verbosity": [
+            0
+        ],
+        "use_label_encoder": [
+            0
+        ],
         "learning_rate": [
             1,
             0.1,
             0.01,
             0.001
-        ], 
+        ],
         "booster": [
             "gbtree",
             "gblinear",
             "dart"
-        ],
-        "gamma": [
-            0,
-            0.1,
-            0.2
         ],
         "scale_pos_weight": [
             0.8,
@@ -346,21 +347,22 @@
         "n_estimators": [
             15
         ],
+        "verbosity": [
+            0
+        ],
+        "use_label_encoder": [
+            0
+        ],
         "learning_rate": [
             1,
             0.1,
             0.01,
             0.001
-        ], 
+        ],
         "booster": [
             "gbtree",
             "gblinear",
             "dart"
-        ],
-        "gamma": [
-            0,
-            0.1,
-            0.2
         ],
         "scale_pos_weight": [
             0.8,
