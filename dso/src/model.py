@@ -47,8 +47,8 @@ class Dataset():
             self.test = t2[t2['PaidLate'] == 1]
         elif step == 3:
             self.y = 'DaysLateAM'
-            self.train = t1[t1['PaidLateAM'] == 1]
-            self.test = t2[t2['PaidLateAM'] == 1]
+            self.train = t1[t1['PaidLate'] == 1]
+            self.test = t2[t2['PaidLate'] == 1]
 
         if self.x_columns and self.y_columns:
             self.transform(self.y, train, test)
@@ -118,7 +118,7 @@ class Model():
     def test(self, x_test, y_test):
         md = pickle.load(open(os.path.join(self.output, 'model.sav'), 'rb'))
 
-        pd_test = md.predict(x_test)
+        pd_test = md.predict(x_test.values)
         matches = self._report(y_test, pd_test, md, prefix='test')
 
         return y_test, pd_test, matches, self.output
