@@ -208,6 +208,7 @@ class Model():
 
 
 def plot_classifier_report(y, pred, output, prefix, cmap='Blues'):
+    sns.set(font_scale=1.5)
     fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(8, 8))
     g = sns.heatmap(confusion_matrix(y, pred), fmt='d', square=True, annot=True, cmap=cmap, ax=ax)
     g.get_figure().savefig(os.path.join(output, f'{prefix}_heatmap.png'))
