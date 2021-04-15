@@ -1,7 +1,10 @@
 {
     "AdaBoostClassifier": {
         "n_estimators": [
-            15
+            32,
+            64,
+            128,
+            256
         ],
         "learning_rate": [
             0.001,
@@ -28,7 +31,10 @@
     },
     "AdaBoostRegressor": {
         "n_estimators": [
-            15
+            32,
+            64,
+            128,
+            256
         ],
         "learning_rate": [
             0.001,
@@ -55,7 +61,10 @@
     },
     "BaggingClassifier": {
         "n_estimators": [
-            15
+            32,
+            64,
+            128,
+            256
         ],
         "max_samples": [
             0.4,
@@ -82,7 +91,10 @@
     },
     "BalancedBaggingClassifier": {
         "n_estimators": [
-            15
+            32,
+            64,
+            128,
+            256
         ],
         "max_samples": [
             0.8,
@@ -111,7 +123,10 @@
     },
     "BaggingRegressor": {
         "n_estimators": [
-            15
+            32,
+            64,
+            128,
+            256
         ],
         "max_samples": [
             0.4,
@@ -138,7 +153,14 @@
     },
     "GradientBoostingClassifier": {
         "n_estimators": [
-            15
+            32,
+            64,
+            128,
+            256
+        ],
+        "loss": [
+            "deviance",
+            "exponential"
         ],
         "learning_rate": [
             0.001,
@@ -165,7 +187,16 @@
     },
     "GradientBoostingRegressor": {
         "n_estimators": [
-            15
+            32,
+            64,
+            128,
+            256
+        ],
+        "loss": [
+            "ls",
+            "lad",
+            "huber",
+            "quantile"
         ],
         "learning_rate": [
             0.001,
@@ -192,7 +223,10 @@
     },
     "RandomForestClassifier": {
         "n_estimators": [
-            15
+            32,
+            64,
+            128,
+            256
         ],
         "class_weight": [
             "balanced"
@@ -216,7 +250,10 @@
     },
     "BalancedRandomForestClassifier": {
         "n_estimators": [
-            15
+            32,
+            64,
+            128,
+            256
         ],
         "class_weight": [
             "balanced"
@@ -248,7 +285,10 @@
     },
     "RandomForestRegressor": {
         "n_estimators": [
-            15
+            32,
+            64,
+            128,
+            256
         ],
         "max_samples": [
             null,
@@ -269,7 +309,10 @@
     },
     "RUSBoostClassifier": {
         "n_estimators": [
-            15
+            32,
+            64,
+            128,
+            256
         ],
         "learning_rate": [
             0.001,
@@ -280,6 +323,10 @@
         "sampling_strategy": [
             0.75,
             "auto"
+        ],
+        "replacement": [
+            0,
+            1
         ],
         "base_estimator__min_samples_split": [
             2,
@@ -296,7 +343,10 @@
     },
     "XGBClassifier": {
         "n_estimators": [
-            15
+            32,
+            64,
+            128,
+            256
         ],
         "verbosity": [
             0
@@ -304,9 +354,15 @@
         "use_label_encoder": [
             0
         ],
+        "tree_method": [
+            "exact",
+            "approx",
+            "hist"
+        ],
         "learning_rate": [
-            0.3,
-            0.5
+            0.4,
+            0.5,
+            0.6
         ],
         "max_depth": [
             6,
@@ -332,7 +388,10 @@
     },
     "XGBRegressor": {
         "n_estimators": [
-            15
+            32,
+            64,
+            128,
+            256
         ],
         "verbosity": [
             0
