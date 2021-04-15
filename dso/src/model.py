@@ -1,11 +1,13 @@
+from sklearn.metrics import accuracy_score, precision_score, recall_score
 from sklearn.metrics import confusion_matrix, classification_report, mean_squared_error
-from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
+
+from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor, export_graphviz
 from sklearn.base import is_classifier, is_regressor, clone
-from sklearn.preprocessing import RobustScaler
 
 from sklearn.model_selection import RepeatedStratifiedKFold, RepeatedKFold
 from sklearn.model_selection import StratifiedShuffleSplit, ShuffleSplit
 from sklearn.model_selection import GridSearchCV
+from sklearn.preprocessing import RobustScaler
 
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -176,9 +178,12 @@ class Model():
         pickle.dump(model, open(os.path.join(self.output, 'model.sav'), 'wb'))
         matches = None
 
+        export_graphviz(decision_tree=model.estimators_[0],
+                        out_file=os.path.join(self.output, f'{prefix}_tree.dot'))
+
         if is_classifier(self.model):
             with open(os.path.join(self.output, f'{prefix}_classification_report.txt'), 'w') as f:
-                report = classification_report(gt, pred, digits=4, zero_division=True)
+                matches, report = [gt, pred], classification_report(gt, pred, digits=4, zero_division=True)
                 f.write(''.join(report))
                 print(''.join(report))
 
@@ -212,6 +217,30 @@ def plot_classifier_report(y, pred, output, prefix, cmap='Blues'):
     fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(8, 8))
     g = sns.heatmap(confusion_matrix(y, pred), fmt='d', square=True, annot=True, cmap=cmap, ax=ax)
     g.get_figure().savefig(os.path.join(output, f'{prefix}_heatmap.png'))
+
+
+def plot_classifier_per_day_report(matches, output, prefix, days):
+    x_labels = 'Dia do Mês'
+    y_labels = ['Acurácia', 'Precision', 'Recall']
+    p_labels = list(range(0, 101, 10))
+    m_labels = list(range(0, 31, 2))
+
+    df1 = pd.DataFrame({'Days': days, 'GT': matches[0], 'Predict': matches[1]})
+    df2 = pd.DataFrame({x_labels: df1.groupby(['Days']).groups.keys(), y_labels[0]: 0, y_labels[1]: 0, y_labels[2]: 0})
+
+    for i, d in enumerate(df1.groupby(['Days']).groups.keys()):
+        gt_day = df1[df1['Days'] == d]['GT']
+        pd_day = df1[df1['Days'] == d]['Predict']
+
+        df2[y_labels[0]][i] = accuracy_score(gt_day, pd_day) * 100
+        df2[y_labels[1]][i] = precision_score(gt_day, pd_day) * 100
+        df2[y_labels[2]][i] = recall_score(gt_day, pd_day) * 100
+
+    df2.plot.line(x=x_labels, y=y_labels, yticks=p_labels, xticks=m_labels, figsize=(8, 5), fontsize=14, rot=0)
+
+    plt.ylabel('Métricas (%)', fontsize=14)
+    plt.xlabel(x_labels, fontsize=14)
+    plt.savefig(os.path.join(output, f'{prefix}_metrics_per_day.png'))
 
 
 def plot_regressor_report(matches, output, prefix):
@@ -342,6 +371,9 @@ if __name__ == "__main__":
 
         if arg.step == 1 or arg.step == 2:
             plot_classifier_report(y, p, o, prefix=arg.action, cmap=('Blues' if arg.step == 1 else 'YlOrBr'))
+
+            if arg.action == 'test':
+                plot_classifier_per_day_report(m, o, prefix='test', days=dataset.test['DueDate'].dt.day)
 
         elif arg.step == 3:
             plot_regressor_report(m, o, prefix=arg.action)
