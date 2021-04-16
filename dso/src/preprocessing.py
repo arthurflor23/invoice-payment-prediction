@@ -102,17 +102,6 @@ def step2_generate(filename):
 def step3_prepare(filename):
     df = pd.read_csv(filename, parse_dates=['DocumentDate', 'DueDate', 'ClearingDate'], low_memory=False)
 
-    vip_customers = [305689, 377986, 380520, 400021, 400022, 400074, 400120,
-                     400127, 400129, 400250, 400546, 400124, 7398, 71954,
-                     72052, 73101, 73311, 74935, 76085, 77890, 78190, 78456,
-                     78457, 78475, 79110, 72070, 79379, 79717, 301827, 330695,
-                     378803, 378804, 378805, 379986, 380092, 380700, 380701,
-                     380763, 300860, 380956, 381086, 383387, 385891, 386621,
-                     388651, 389233, 391526, 391527, 391528, 393444, 395292, 395948]
-
-    df['PartnerCustomer'] = 0
-    df.loc[df['CustomerKey'].isin(vip_customers), 'PartnerCustomer'] = 1
-
     df['DaysToDueDate'] = (df['DueDate'] - df['DocumentDate']).dt.days
     df['DaysToEndMonth'] = ((df['DueDate'] + pd.offsets.MonthEnd(0)) - df['DueDate']).dt.days
 
