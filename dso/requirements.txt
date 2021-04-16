@@ -7,4 +7,5 @@ pandas>=1.2.3
 scikit-learn>=0.24.1
 seaborn>=0.11.1
 tqdm>=4.59.0
+yellowbrick>=1.3.post1
 xgboost>=1.3.3
