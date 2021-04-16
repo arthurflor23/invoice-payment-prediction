@@ -1,6 +1,7 @@
 # Dataset files
 *.CSV
 *.csv
+*.sav
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -16,8 +17,6 @@ build/
 develop-eggs/
 dist/
 downloads/
-output/
-output*/
 eggs/
 .eggs/
 lib/
