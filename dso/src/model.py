@@ -7,7 +7,9 @@ from sklearn.base import is_classifier, is_regressor, clone
 from sklearn.model_selection import RepeatedStratifiedKFold, RepeatedKFold
 from sklearn.model_selection import StratifiedShuffleSplit, ShuffleSplit
 from sklearn.model_selection import GridSearchCV
+
 from sklearn.preprocessing import RobustScaler
+from yellowbrick.model_selection import rfecv
 
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -28,11 +30,13 @@ class Dataset():
         self.date = pd.to_datetime(split_date)
         self.offset = pd.DateOffset(months=1)
 
-    def set_columns(self, x_columns, y_columns):
-        self.x_columns = x_columns
-        self.y_columns = y_columns
-
     def load(self, step, train=True, test=True):
+        json_features = f'./assets/features{step}.json' \
+            if os.path.exists(f'./assets/features{step}.json') else './assets/features.json'
+
+        self.x_columns = json.load(open(json_features))['x_columns']
+        self.y_columns = ['PaidLate', 'PaidLateAM', 'DaysLate', 'DaysLateAM', 'PaymentCategory']
+
         df = pd.read_csv(self.filename, parse_dates=['DueDate'], low_memory=False)
         df['DaysLateAM'].clip(upper=30, inplace=True)
 
@@ -77,12 +81,24 @@ class Model():
         self.estimator = estimator.split('.')[-1]
         self.model = getattr(importlib.import_module(self.module), self.estimator)
 
-        self.searchfile = 'gridsearch.json'
-        self.hyperfile = f'hyperparameters_{step}.json'
+        self.searchfile = './assets/gridsearch.json'
+        self.hyperfile = f'./assets/hyperparameters_{step}.json'
 
         self.gridsearch = json.load(open(self.searchfile)) if os.path.exists(self.searchfile) else None
         self.hyper = json.load(open(self.hyperfile)) if os.path.exists(self.hyperfile) else {}
         self.output = os.path.join('..', f'output{step}', self.estimator)
+
+    def selection(self, step, x_columns, x_train, y_train):
+        vis = rfecv(self.model(16, random_state=SEED), X=x_train, y=y_train,
+                    cv=StratifiedShuffleSplit(n_splits=1, train_size=0.8, random_state=SEED))
+
+        vis.show(outpath=f'./assets/features{step}.png')
+
+        json_content = {'x_columns': np.array(x_columns)[vis.support_].tolist()}
+        print(vis.support_, '\n', json_content['x_columns'])
+
+        with open(f'./assets/features{step}.json', 'w') as f:
+            json.dump(json_content, f, indent=4)
 
     def tunning(self, x_train, y_train):
         assert self.gridsearch
@@ -238,7 +254,7 @@ def plot_classifier_per_day_report(matches, output, prefix, days):
 
     df2.plot.line(x=x_labels, y=y_labels, yticks=p_labels, xticks=m_labels, figsize=(8, 5), fontsize=14, rot=0)
 
-    plt.ylabel('Métricas (%)', fontsize=14)
+    plt.ylabel('Score (%)', fontsize=14)
     plt.xlabel(x_labels, fontsize=14)
     plt.savefig(os.path.join(output, f'{prefix}_metrics_per_day.png'))
 
@@ -292,71 +308,19 @@ if __name__ == "__main__":
     parser.add_argument('-s', '--step', type=int)
     parser.add_argument('-a', '--action', type=str)
     parser.add_argument('-e', '--estimator', type=str)
-
     arg = parser.parse_args()
 
-    dataset = Dataset(filename=os.path.join('..', 'data', 'base4.csv'),
-                      split_date='2021-02-01')
-
-    dataset.set_columns(x_columns=['InvoiceCount',
-                                   'OSInvoiceCount',
-                                   'R_OSInvoiceCount',
-
-                                   'InvoiceAmount',
-                                   'OSInvoiceAmount',
-                                   'R_OSInvoiceAmount',
-
-                                   'DaysToDueDate',
-                                   'DaysToEndMonth',
-                                   'WeekdayEndMonth',
-                                   'PartnerCustomer',
-
-                                   'MAD_DaysLate',
-                                   'MED_DaysLate',
-
-                                   'MAD_DaysLateAM',
-                                   'MED_DaysLateAM',
-
-                                   'MAD_OSDaysLate',
-                                   'MED_OSDaysLate',
-
-                                   'MAD_OSDaysLateAM',
-                                   'MED_OSDaysLateAM',
-
-                                   'PaidCount',
-                                   'PaidLateCount',
-                                   'PaidLateAMCount',
-                                   'R_PaidLateCount',
-                                   'R_PaidLateAMCount',
-
-                                   'PaidAmount',
-                                   'PaidLateAmount',
-                                   'PaidLateAMAmount',
-                                   'R_PaidLateAmount',
-                                   'R_PaidLateAMAmount',
-
-                                   'OSCount',
-                                   'OSLateCount',
-                                   'OSLateAMCount',
-                                   'R_OSLateCount',
-                                   'R_OSLateAMCount',
-
-                                   'OSAmount',
-                                   'OSLateAmount',
-                                   'OSLateAMAmount',
-                                   'R_OSLateAmount',
-                                   'R_OSLateAMAmount'],
-
-                        y_columns=['PaidLate',
-                                   'PaidLateAM',
-                                   'DaysLate',
-                                   'DaysLateAM',
-                                   'PaymentCategory'])
+    dataset = Dataset(filename=os.path.join('..', 'data', 'base4.csv'), split_date='2021-02-01')
 
     if arg.action == 'tunning':
         dataset.load(step=arg.step, train=True, test=False)
         model = Model(arg.estimator, step=arg.step)
         model.tunning(dataset.x_train, dataset.y_train)
+
+    elif arg.action == "selection":
+        dataset.load(step=arg.step, train=True, test=False)
+        model = Model(arg.estimator, step=arg.step)
+        model.selection(arg.step, dataset.x_columns, dataset.x_train, dataset.y_train)
 
     else:
         if arg.action == 'train':
