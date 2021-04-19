@@ -31,8 +31,8 @@ class Dataset():
         self.offset = pd.DateOffset(months=1)
 
     def load(self, step, train=True, test=True):
-        json_features = f'./assets/features{step}.json' \
-            if os.path.exists(f'./assets/features{step}.json') else './assets/features.json'
+        json_features = f'../assets/features{step}.json' \
+            if os.path.exists(f'../assets/features{step}.json') else '../assets/features.json'
 
         self.x_columns = json.load(open(json_features))['x_columns']
         self.y_columns = ['PaidLate', 'PaidLateAM', 'DaysLate', 'DaysLateAM', 'PaymentCategory']
@@ -81,26 +81,26 @@ class Model():
         self.estimator = estimator.split('.')[-1]
         self.model = getattr(importlib.import_module(self.module), self.estimator)
 
-        self.searchfile = './assets/gridsearch.json'
-        self.hyperfile = f'./assets/hyperparameters_{step}.json'
+        self.searchfile = '../assets/gridsearch.json'
+        self.hyperfile = f'../assets/hyperparameters_{step}.json'
 
         self.gridsearch = json.load(open(self.searchfile)) if os.path.exists(self.searchfile) else None
         self.hyper = json.load(open(self.hyperfile)) if os.path.exists(self.hyperfile) else {}
         self.output = os.path.join('..', f'output{step}', self.estimator)
 
     def selection(self, step, x_columns, x_train, y_train):
-        vis = rfecv(self.model(16, random_state=SEED), X=x_train, y=y_train,
+        vis = rfecv(self.model(random_state=SEED), X=x_train, y=y_train,
                     cv=StratifiedShuffleSplit(n_splits=1, train_size=0.8, random_state=SEED))
 
-        vis.show(outpath=f'./assets/features{step}.png')
+        vis.show(outpath=f'../assets/features{step}.png')
 
         json_content = {'x_columns': np.array(x_columns)[vis.support_].tolist()}
         print(vis.support_, '\n', json_content['x_columns'])
 
-        with open(f'./assets/features{step}.json', 'w') as f:
+        with open(f'../assets/features{step}.json', 'w') as f:
             json.dump(json_content, f, indent=4)
 
-    def tunning(self, x_train, y_train):
+    def tuning(self, x_train, y_train):
         assert self.gridsearch
         param_grid = self.gridsearch[self.estimator] if self.estimator in self.gridsearch.keys() else {}
 
@@ -312,10 +312,10 @@ if __name__ == "__main__":
 
     dataset = Dataset(filename=os.path.join('..', 'data', 'base4.csv'), split_date='2021-02-01')
 
-    if arg.action == 'tunning':
+    if arg.action == 'tuning':
         dataset.load(step=arg.step, train=True, test=False)
         model = Model(arg.estimator, step=arg.step)
-        model.tunning(dataset.x_train, dataset.y_train)
+        model.tuning(dataset.x_train, dataset.y_train)
 
     elif arg.action == "selection":
         dataset.load(step=arg.step, train=True, test=False)
