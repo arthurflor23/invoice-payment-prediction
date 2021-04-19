@@ -1,0 +1,89 @@
+{
+    "AdaBoostClassifier": {
+        "score": 0.8599199747681497,
+        "params": {
+            "base_estimator__criterion": "gini",
+            "base_estimator__min_samples_split": 4,
+            "base_estimator__min_weight_fraction_leaf": 1e-08,
+            "learning_rate": 0.3,
+            "n_estimators": 16
+        }
+    },
+    "BaggingClassifier": {
+        "score": 0.84756178017943,
+        "params": {
+            "base_estimator__criterion": "entropy",
+            "base_estimator__min_samples_split": 12,
+            "base_estimator__min_weight_fraction_leaf": 0.0,
+            "n_estimators": 16
+        }
+    },
+    "BalancedBaggingClassifier": {
+        "score": 0.847318196652695,
+        "params": {
+            "base_estimator__criterion": "entropy",
+            "base_estimator__min_samples_split": 4,
+            "base_estimator__min_weight_fraction_leaf": 0.0,
+            "n_estimators": 16,
+            "sampling_strategy": 0.7
+        }
+    },
+    "GradientBoostingClassifier": {
+        "score": 0.8318014202553755,
+        "params": {
+            "criterion": "friedman_mse",
+            "learning_rate": 0.5,
+            "loss": "deviance",
+            "min_samples_split": 2,
+            "min_weight_fraction_leaf": 0.0,
+            "n_estimators": 16
+        }
+    },
+    "RandomForestClassifier": {
+        "score": 0.8559979500009085,
+        "params": {
+            "class_weight": "balanced",
+            "criterion": "entropy",
+            "min_samples_split": 4,
+            "min_weight_fraction_leaf": 0.0,
+            "n_estimators": 16
+        }
+    },
+    "BalancedRandomForestClassifier": {
+        "score": 0.8486703935551356,
+        "params": {
+            "class_weight": "balanced",
+            "criterion": "entropy",
+            "min_samples_split": 2,
+            "min_weight_fraction_leaf": 0.0,
+            "n_estimators": 16,
+            "sampling_strategy": 0.7
+        }
+    },
+    "RUSBoostClassifier": {
+        "score": 0.8530282196876104,
+        "params": {
+            "base_estimator__min_samples_split": 4,
+            "base_estimator__min_weight_fraction_leaf": 0.0,
+            "learning_rate": 0.1,
+            "n_estimators": 16,
+            "replacement": 0,
+            "sampling_strategy": 0.7
+        }
+    },
+    "XGBClassifier": {
+        "score": 0.8521135917371667,
+        "params": {
+            "learning_rate": 0.3,
+            "max_delta_step": 1,
+            "max_depth": 22,
+            "n_estimators": 16,
+            "reg_alpha": 0,
+            "reg_lambda": 1,
+            "subsample": 1,
+            "tree_method": "hist",
+            "use_label_encoder": 0,
+            "verbosity": 0
+        }
+    }
+}
