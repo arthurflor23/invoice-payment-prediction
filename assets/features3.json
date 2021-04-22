@@ -1,0 +1,31 @@
+{
+    "x_columns": [
+        "InvoiceCount",
+        "InvoiceAmount",
+        "OSInvoiceAmount",
+        "DaysToDueDate",
+        "DaysToEndMonth",
+        "MAD_DaysLate",
+        "MED_DaysLate",
+        "MAD_DaysLateAM",
+        "MED_DaysLateAM",
+        "MAD_OSDaysLate",
+        "MED_OSDaysLate",
+        "MAD_OSDaysLateAM",
+        "MED_OSDaysLateAM",
+        "PaidLateCount",
+        "R_PaidLateCount",
+        "R_PaidLateAMCount",
+        "PaidAmount",
+        "PaidLateAmount",
+        "R_PaidLateAmount",
+        "R_PaidLateAMAmount",
+        "OSCount",
+        "OSLateAMCount",
+        "R_OSLateCount",
+        "R_OSLateAMCount",
+        "OSAmount",
+        "R_OSLateAmount",
+        "R_OSLateAMAmount"
+    ]
+}
