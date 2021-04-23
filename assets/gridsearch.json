@@ -1,7 +1,12 @@
 {
     "AdaBoostClassifier": {
         "n_estimators": [
-            16
+            16,
+            32,
+            64,
+            128,
+            256,
+            512
         ],
         "learning_rate": [
             0.1,
@@ -26,7 +31,12 @@
     },
     "AdaBoostRegressor": {
         "n_estimators": [
-            16
+            16,
+            32,
+            64,
+            128,
+            256,
+            512
         ],
         "learning_rate": [
             0.01,
@@ -51,7 +61,12 @@
     },
     "BaggingClassifier": {
         "n_estimators": [
-            16
+            16,
+            32,
+            64,
+            128,
+            256,
+            512
         ],
         "base_estimator__criterion": [
             "entropy",
@@ -71,7 +86,12 @@
     },
     "BalancedBaggingClassifier": {
         "n_estimators": [
-            16
+            16,
+            32,
+            64,
+            128,
+            256,
+            512
         ],
         "sampling_strategy": [
             0.7,
@@ -96,7 +116,12 @@
     },
     "BaggingRegressor": {
         "n_estimators": [
-            16
+            16,
+            32,
+            64,
+            128,
+            256,
+            512
         ],
         "base_estimator__criterion": [
             "friedman_mse",
@@ -116,7 +141,12 @@
     },
     "GradientBoostingClassifier": {
         "n_estimators": [
-            16
+            16,
+            32,
+            64,
+            128,
+            256,
+            512
         ],
         "loss": [
             "deviance",
@@ -145,7 +175,12 @@
     },
     "GradientBoostingRegressor": {
         "n_estimators": [
-            16
+            16,
+            32,
+            64,
+            128,
+            256,
+            512
         ],
         "loss": [
             "ls",
@@ -176,7 +211,12 @@
     },
     "RandomForestClassifier": {
         "n_estimators": [
-            16
+            16,
+            32,
+            64,
+            128,
+            256,
+            512
         ],
         "class_weight": [
             "balanced"
@@ -199,7 +239,12 @@
     },
     "BalancedRandomForestClassifier": {
         "n_estimators": [
-            16
+            16,
+            32,
+            64,
+            128,
+            256,
+            512
         ],
         "class_weight": [
             "balanced"
@@ -227,7 +272,12 @@
     },
     "RandomForestRegressor": {
         "n_estimators": [
-            16
+            16,
+            32,
+            64,
+            128,
+            256,
+            512
         ],
         "min_samples_split": [
             2,
@@ -243,7 +293,12 @@
     },
     "RUSBoostClassifier": {
         "n_estimators": [
-            16
+            16,
+            32,
+            64,
+            128,
+            256,
+            512
         ],
         "learning_rate": [
             0.1,
@@ -273,7 +328,12 @@
     },
     "XGBClassifier": {
         "n_estimators": [
-            16
+            16,
+            32,
+            64,
+            128,
+            256,
+            512
         ],
         "verbosity": [
             0
@@ -315,7 +375,12 @@
     },
     "XGBRegressor": {
         "n_estimators": [
-            16
+            16,
+            32,
+            64,
+            128,
+            256,
+            512
         ],
         "verbosity": [
             0
