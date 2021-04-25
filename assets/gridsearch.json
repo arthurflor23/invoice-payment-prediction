@@ -1,6 +1,7 @@
 {
     "AdaBoostClassifier": {
         "n_estimators": [
+            32,
             64,
             128,
             256,
@@ -29,6 +30,7 @@
     },
     "AdaBoostRegressor": {
         "n_estimators": [
+            32,
             64,
             128,
             256,
@@ -57,6 +59,7 @@
     },
     "BaggingClassifier": {
         "n_estimators": [
+            32,
             64,
             128,
             256,
@@ -79,6 +82,7 @@
     },
     "BalancedBaggingClassifier": {
         "n_estimators": [
+            32,
             64,
             128,
             256,
@@ -107,6 +111,7 @@
     },
     "BaggingRegressor": {
         "n_estimators": [
+            32,
             64,
             128,
             256,
@@ -129,6 +134,7 @@
     },
     "GradientBoostingClassifier": {
         "n_estimators": [
+            32,
             64,
             128,
             256,
@@ -157,6 +163,7 @@
     },
     "GradientBoostingRegressor": {
         "n_estimators": [
+            32,
             64,
             128,
             256,
@@ -185,6 +192,7 @@
     },
     "RandomForestClassifier": {
         "n_estimators": [
+            32,
             64,
             128,
             256,
@@ -210,6 +218,7 @@
     },
     "BalancedRandomForestClassifier": {
         "n_estimators": [
+            32,
             64,
             128,
             256,
@@ -241,6 +250,7 @@
     },
     "RandomForestRegressor": {
         "n_estimators": [
+            32,
             64,
             128,
             256,
@@ -260,6 +270,7 @@
     },
     "RUSBoostClassifier": {
         "n_estimators": [
+            32,
             64,
             128,
             256,
@@ -291,6 +302,7 @@
     },
     "XGBClassifier": {
         "n_estimators": [
+            32,
             64,
             128,
             256,
@@ -321,6 +333,7 @@
     },
     "XGBRegressor": {
         "n_estimators": [
+            32,
             64,
             128,
             256,
