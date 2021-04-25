@@ -1,7 +1,7 @@
 from sklearn.metrics import accuracy_score, precision_score, recall_score
 from sklearn.metrics import confusion_matrix, classification_report, mean_squared_error
 
-from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor, export_graphviz
+from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
 from sklearn.base import is_classifier, is_regressor, clone
 
 from sklearn.model_selection import RepeatedStratifiedKFold, RepeatedKFold
@@ -114,7 +114,7 @@ class Model():
                 md = md.set_params(**base_param)
 
         elif is_regressor(self.model):
-            scoring = None
+            scoring = 'neg_mean_squared_error'
             md = self.model(random_state=SEED)
             cv = ShuffleSplit(n_splits=1, train_size=0.8, random_state=SEED)
 
@@ -193,9 +193,6 @@ class Model():
         os.makedirs(self.output, exist_ok=True)
         pickle.dump(model, open(os.path.join(self.output, 'model.sav'), 'wb'))
         matches = None
-
-        export_graphviz(decision_tree=model.estimators_[0],
-                        out_file=os.path.join(self.output, f'{prefix}_tree.dot'))
 
         if is_classifier(self.model):
             with open(os.path.join(self.output, f'{prefix}_classification_report.txt'), 'w') as f:
