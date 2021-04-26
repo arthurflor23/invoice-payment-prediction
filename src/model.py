@@ -90,7 +90,7 @@ class Model():
 
     def selection(self, step, x_columns, x_train, y_train):
         vis = rfecv(self.model(random_state=SEED), X=x_train, y=y_train,
-                    cv=StratifiedShuffleSplit(n_splits=1, train_size=0.8, random_state=SEED))
+                    cv=StratifiedShuffleSplit(n_splits=1, train_size=0.9, random_state=SEED))
 
         vis.show(outpath=f'../assets/features{step}.png')
 
@@ -107,7 +107,7 @@ class Model():
         if is_classifier(self.model):
             scoring = 'f1_macro'
             md = self.model(random_state=SEED)
-            cv = StratifiedShuffleSplit(n_splits=1, train_size=0.8, random_state=SEED)
+            cv = StratifiedShuffleSplit(n_splits=1, train_size=0.9, random_state=SEED)
 
             if 'base_estimator' in md.get_params() and md.get_params()['base_estimator'] is None:
                 base_param = {'base_estimator': DecisionTreeClassifier(class_weight='balanced', random_state=SEED)}
@@ -116,7 +116,7 @@ class Model():
         elif is_regressor(self.model):
             scoring = 'neg_mean_squared_error'
             md = self.model(random_state=SEED)
-            cv = ShuffleSplit(n_splits=1, train_size=0.8, random_state=SEED)
+            cv = ShuffleSplit(n_splits=1, train_size=0.9, random_state=SEED)
 
             if 'base_estimator' in md.get_params() and md.get_params()['base_estimator'] is None:
                 base_param = {'base_estimator': DecisionTreeRegressor(random_state=SEED)}
