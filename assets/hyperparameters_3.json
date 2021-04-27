@@ -10,40 +10,40 @@
         }
     },
     "BaggingRegressor": {
-        "score": 0.4785020350382563,
+        "score": 0.5051401490862721,
         "params": {
             "base_estimator__criterion": "friedman_mse",
-            "base_estimator__min_samples_split": 4,
-            "base_estimator__min_weight_fraction_leaf": 0.0,
-            "n_estimators": 16
+            "base_estimator__min_samples_split": 2,
+            "base_estimator__min_weight_fraction_leaf": 0.0001,
+            "n_estimators": 512
         }
     },
     "GradientBoostingRegressor": {
-        "score": 0.434704606882217,
+        "score": 0.4588510460474754,
         "params": {
             "criterion": "friedman_mse",
             "learning_rate": 0.5,
             "loss": "ls",
             "min_samples_split": 2,
             "min_weight_fraction_leaf": 0.0,
-            "n_estimators": 16
+            "n_estimators": 256
         }
     },
     "RandomForestRegressor": {
-        "score": 0.4784151710840009,
+        "score": 0.5048465604235781,
         "params": {
             "min_samples_split": 4,
-            "min_weight_fraction_leaf": 0.0,
-            "n_estimators": 16
+            "min_weight_fraction_leaf": 0.0001,
+            "n_estimators": 512
         }
     },
     "XGBRegressor": {
-        "score": 0.477682598900547,
+        "score": 0.4820579821602241,
         "params": {
             "learning_rate": 0.5,
             "max_delta_step": 3,
             "max_depth": 22,
-            "n_estimators": 16,
+            "n_estimators": 64,
             "reg_alpha": 0,
             "reg_lambda": 2,
             "subsample": 1,
