@@ -314,7 +314,7 @@ if __name__ == "__main__":
         model = Model(arg.estimator, step=arg.step)
         model.tuning(dataset.x_train, dataset.y_train)
 
-    elif arg.action == "selection":
+    elif arg.action == 'selection':
         dataset.load(step=arg.step, train=True, test=False)
         model = Model(arg.estimator, step=arg.step)
         model.selection(arg.step, dataset.x_columns, dataset.x_train, dataset.y_train)
