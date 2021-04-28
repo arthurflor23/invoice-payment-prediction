@@ -1,87 +1,82 @@
 {
     "AdaBoostClassifier": {
-        "score": 0.865930988820608,
+        "score": 0.8638547844166016,
         "params": {
-            "base_estimator__criterion": "gini",
-            "base_estimator__min_samples_split": 4,
-            "base_estimator__min_weight_fraction_leaf": 1e-08,
-            "learning_rate": 0.3,
-            "n_estimators": 256
+            "base_estimator__criterion": "entropy",
+            "base_estimator__min_samples_split": 14,
+            "base_estimator__min_weight_fraction_leaf": 0.0,
+            "learning_rate": 0.05,
+            "n_estimators": 512
         }
     },
     "BaggingClassifier": {
-        "score": 0.8545677096794134,
+        "score": 0.8552477751982697,
         "params": {
             "base_estimator__criterion": "entropy",
-            "base_estimator__min_samples_split": 12,
+            "base_estimator__min_samples_split": 14,
             "base_estimator__min_weight_fraction_leaf": 0.0,
             "n_estimators": 512
         }
     },
     "BalancedBaggingClassifier": {
-        "score": 0.8539666341147578,
+        "score": 0.8522331057276007,
         "params": {
             "base_estimator__criterion": "entropy",
-            "base_estimator__min_samples_split": 4,
+            "base_estimator__min_samples_split": 6,
             "base_estimator__min_weight_fraction_leaf": 0.0,
-            "n_estimators": 256,
-            "sampling_strategy": 0.7
+            "n_estimators": 512,
+            "sampling_strategy": 0.75
         }
     },
     "GradientBoostingClassifier": {
-        "score": 0.8318014202553755,
+        "score": 0.8388016734946642,
         "params": {
             "criterion": "friedman_mse",
-            "learning_rate": 0.5,
+            "learning_rate": 1,
             "loss": "deviance",
             "min_samples_split": 2,
             "min_weight_fraction_leaf": 0.0,
-            "n_estimators": 16
+            "n_estimators": 256
         }
     },
     "RandomForestClassifier": {
-        "score": 0.8667335887400289,
+        "score": 0.8629062336555684,
         "params": {
             "class_weight": "balanced",
             "criterion": "entropy",
-            "min_samples_split": 4,
+            "min_samples_split": 14,
             "min_weight_fraction_leaf": 0.0,
-            "n_estimators": 512
+            "n_estimators": 256
         }
     },
     "BalancedRandomForestClassifier": {
-        "score": 0.8554078060146852,
+        "score": 0.8576147687954511,
         "params": {
             "class_weight": "balanced",
             "criterion": "entropy",
             "min_samples_split": 2,
             "min_weight_fraction_leaf": 0.0,
             "n_estimators": 256,
-            "sampling_strategy": 0.7
+            "sampling_strategy": 0.75
         }
     },
     "RUSBoostClassifier": {
-        "score": 0.8565280452586501,
+        "score": 0.8599159879889602,
         "params": {
-            "base_estimator__min_samples_split": 4,
+            "base_estimator__min_samples_split": 2,
             "base_estimator__min_weight_fraction_leaf": 0.0,
             "learning_rate": 0.1,
-            "n_estimators": 32,
-            "replacement": 0,
-            "sampling_strategy": 0.7
+            "n_estimators": 512,
+            "sampling_strategy": 0.75
         }
     },
     "XGBClassifier": {
-        "score": 0.8659891071708274,
+        "score": 0.8689675906742687,
         "params": {
-            "learning_rate": 0.3,
-            "max_delta_step": 1,
-            "max_depth": 22,
+            "learning_rate": 0.5,
+            "max_delta_step": 3,
+            "max_depth": 32,
             "n_estimators": 512,
-            "reg_alpha": 0,
-            "reg_lambda": 1,
-            "subsample": 1,
-            "tree_method": "hist",
             "use_label_encoder": 0,
             "verbosity": 0
         }
