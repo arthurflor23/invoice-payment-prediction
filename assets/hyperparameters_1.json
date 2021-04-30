@@ -74,7 +74,7 @@
         "score": 0.8788911560867102,
         "params": {
             "learning_rate": 0.5,
-            "max_delta_step": 3,
+            "max_delta_step": 2,
             "max_depth": 32,
             "n_estimators": 512,
             "use_label_encoder": 0,
