@@ -32,11 +32,11 @@
         "score": 0.8388016734946642,
         "params": {
             "criterion": "friedman_mse",
-            "learning_rate": 1,
+            "learning_rate": 0.5,
             "loss": "deviance",
             "min_samples_split": 2,
             "min_weight_fraction_leaf": 0.0,
-            "n_estimators": 256
+            "n_estimators": 16
         }
     },
     "RandomForestClassifier": {
@@ -63,10 +63,10 @@
     "RUSBoostClassifier": {
         "score": 0.8599159879889602,
         "params": {
-            "base_estimator__min_samples_split": 2,
+            "base_estimator__min_samples_split": 4,
             "base_estimator__min_weight_fraction_leaf": 0.0,
             "learning_rate": 0.1,
-            "n_estimators": 512,
+            "n_estimators": 32,
             "sampling_strategy": 0.75
         }
     },
