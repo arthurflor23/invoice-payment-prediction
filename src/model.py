@@ -246,8 +246,8 @@ def plot_classifier_per_day_report(matches, output, prefix, days):
         pd_day = df1[df1['Days'] == d]['Predict']
 
         df2[y_labels[0]][i] = accuracy_score(gt_day, pd_day) * 100
-        df2[y_labels[1]][i] = precision_score(gt_day, pd_day) * 100
-        df2[y_labels[2]][i] = recall_score(gt_day, pd_day) * 100
+        df2[y_labels[1]][i] = precision_score(gt_day, pd_day, zero_division=True) * 100
+        df2[y_labels[2]][i] = recall_score(gt_day, pd_day, zero_division=True) * 100
 
     df2.plot.line(x=x_labels, y=y_labels, yticks=p_labels, xticks=m_labels, figsize=(8, 5), fontsize=14, rot=0)
 
