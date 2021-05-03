@@ -1,5 +1,5 @@
-RMSE: 3.5777683
-Accuracy with ±0 days of tolerance (range of 0 days): 62.67%
-Accuracy with ±1 days of tolerance (range of 2 days): 74.02%
-Accuracy with ±2 days of tolerance (range of 4 days): 80.64%
-Accuracy with ±3 days of tolerance (range of 6 days): 85.21%
+RMSE: 3.6164617
+Accuracy with ±0 days of tolerance (range of 0 days): 60.23%
+Accuracy with ±1 days of tolerance (range of 2 days): 71.91%
+Accuracy with ±2 days of tolerance (range of 4 days): 79.62%
+Accuracy with ±3 days of tolerance (range of 6 days): 84.16%
