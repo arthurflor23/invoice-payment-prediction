@@ -1,4 +1,4 @@
-from sklearn.metrics import accuracy_score, precision_score, recall_score
+from sklearn.metrics import f1_score, precision_score, recall_score
 from sklearn.metrics import confusion_matrix, classification_report, mean_squared_error
 
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
@@ -86,7 +86,7 @@ class Model():
 
         self.gridsearch = json.load(open(self.searchfile)) if os.path.exists(self.searchfile) else None
         self.hyper = json.load(open(self.hyperfile)) if os.path.exists(self.hyperfile) else {}
-        self.output = os.path.join('..', f'output{step}', self.estimator)
+        self.output = os.path.join('..', 'output', f'step{step}', self.estimator)
 
     def selection(self, step, x_columns, x_train, y_train):
         vis = rfecv(self.model(random_state=SEED), X=x_train, y=y_train,
@@ -234,7 +234,7 @@ def plot_classifier_report(y, pred, output, prefix, cmap='Blues'):
 
 def plot_classifier_per_day_report(matches, output, prefix, days):
     x_labels = 'Dia do Mês'
-    y_labels = ['Acurácia', 'Precision', 'Recall']
+    y_labels = ['F1-score', 'Precision', 'Recall']
     p_labels = list(range(0, 101, 10))
     m_labels = list(range(0, 31, 2))
 
@@ -245,7 +245,7 @@ def plot_classifier_per_day_report(matches, output, prefix, days):
         gt_day = df1[df1['Days'] == d]['GT']
         pd_day = df1[df1['Days'] == d]['Predict']
 
-        df2[y_labels[0]][i] = accuracy_score(gt_day, pd_day) * 100
+        df2[y_labels[0]][i] = f1_score(gt_day, pd_day, average='macro', zero_division=True) * 100
         df2[y_labels[1]][i] = precision_score(gt_day, pd_day, zero_division=True) * 100
         df2[y_labels[2]][i] = recall_score(gt_day, pd_day, zero_division=True) * 100
 
