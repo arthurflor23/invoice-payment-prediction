@@ -56,3 +56,24 @@ python model.py --step=<STEP_NUMPER> --action=train --estimator=<ESTIMATOR_MODUL
 ````
 python model.py --step=<STEP_NUMPER> --action=test --estimator=<ESTIMATOR_MODULE>
 ````
+
+## Citation
+
+If this project helped in any way in your research work, feel free to cite the following paper.
+
+### Predição de Pagamentos Atrasados Através de Algoritmos Baseados em Árvore de Decisão ([here](http://revistas.poli.br/index.php/repa/article/view/1746))
+
+```
+@article{10.25286/repa.v6i5.1746,
+    author    = {Neto, Arthur F. S. and Silva, José F. G. da and Oliveira, Glauber N. de},
+    title     = {Predição de Pagamentos Atrasados Através de Algoritmos Baseados em Árvore de Decisão},
+    journal   = {Revista de Engenharia e Pesquisa Aplicada (REPA)},
+    pages     = {1-10},
+    month     = {11},
+    year      = {2021},
+    volume    = {6},
+    number    = {5},
+    url       = {https://doi.org/10.25286/repa.v6i5.1746},
+    doi       = {10.25286/repa.v6i5.1746},
+}
+```
